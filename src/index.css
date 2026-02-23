@@ -1,0 +1,179 @@
+@import "tailwindcss";
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* --dark-mode: class; */
+  /* --------------------------
+   🔤 FONT FAMILY
+  -------------------------- */
+  --font-dm: "DM Sans", sans-serif;
+
+  /* --------------------------
+   🎨 ICON COLORS
+  -------------------------- */
+  --color-icon-50: #e0f2fe;
+  --color-icon-100: #bae6fd;
+  --color-icon-200: #7dd3fc;
+  --color-icon-300: #38bdf8;
+  --color-icon-400: #0ea5e9;
+  --color-icon-500: #0284c7;
+  --color-icon-600: #0369a1;
+  --color-icon-700: #075985;
+  --color-icon-800: #0c4a6e;
+  --color-icon-900: #082f49;
+  --color-icon-bg: #0369a1;
+  --color-icon-selected: #eff6ff;
+  --color-icon-selected-text: #075985;
+  --color-icon-sub-selected: #e0f2fe;
+  --color-icon-sub-navigation-text: #ffffff;
+
+  /* --------------------------
+   🎨 ICON DARK COLORS
+  -------------------------- */
+  --color-icon-dark-50: #1e3a56;
+  --color-icon-dark-100: #234766;
+  --color-icon-dark-200: #2c5e86;
+  --color-icon-dark-300: #3374a5;
+  --color-icon-dark-400: #3b8bc5;
+  --color-icon-dark-500: #58aee9;
+  --color-icon-dark-600: #7dc7f7;
+  --color-icon-dark-700: #a3ddff;
+  --color-icon-dark-800: #c9ecff;
+  --color-icon-dark-900: #e8f7ff;
+  --color-icon-dark-bg: #2b82c4;
+  --color-icon-dark-selected: #1a2835;
+  --color-icon-dark-selected-text: #a3ddff;
+  --color-icon-dark-sub-selected: #1f3b52;
+  --color-icon-dark-sub-navigation-text: #e8f7ff;
+
+  /* --------------------------
+   🎨 BUTTON COLORS
+  -------------------------- */
+  --color-button-primary: #0369a1;
+  --color-button-primary-hover: #0284c7;
+  --color-button-primary-active: #075985;
+  --color-button-primary-text: #ffffff;
+
+  --color-button-secondary: #e0f2fe;
+  --color-button-secondary-hover: #bae6fd;
+  --color-button-secondary-active: #7dd3fc;
+  --color-button-secondary-text: #075985;
+
+  --color-button-ghost: transparent;
+  --color-button-ghost-hover: #f0f9ff;
+  --color-button-ghost-active: #e0f2fe;
+  --color-button-ghost-text: #0369a1;
+
+  --color-button-outline-border: #0369a1;
+  --color-button-outline-hover: #e0f2fe;
+  --color-button-outline-active: #bae6fd;
+  --color-button-outline-text: #0369a1;
+
+  --color-button-success: #059669;
+  --color-button-success-hover: #10b981;
+  --color-button-success-active: #047857;
+  --color-button-success-text: #ffffff;
+
+  --color-button-danger: #ef4444;
+  --color-button-danger-100: #fecaca;
+  --color-button-danger-hover: #f87171;
+  --color-button-danger-active: #dc2626;
+  --color-button-danger-text: #ffffff;
+
+  /* --------------------------
+   🎨 CARD COLORS
+  -------------------------- */
+  --color-card: #ffffff;
+  --color-card-sub: #f8fafc;
+  --color-card-hover: #f1f5f9;
+  --color-card-border: #e2e8f0;
+  --color-card-shadow-light: rgba(0, 0, 0, 0.05);
+  --color-card-shadow-dark: rgba(0, 0, 0, 0.10);
+
+  /* --------------------------
+   ☀️ LIGHT THEME
+  -------------------------- */
+  --color-light-bg: #ffffff;
+  --color-light-bg-secondary: #f5f6f7;
+  --color-light-card: #f9fafb;
+  --color-light-border: #e2e4e7;
+  --color-light-border-strong: #cfd3d8;
+  --color-light-text: #1f2937;
+  --color-light-text-secondary: #4b5563;
+  --color-light-text-muted: #6b7280;
+  --color-light-hover: #f3f4f6;
+  --color-light-active: #e5e7eb;
+  --color-light-card1: #ffffff;
+  --color-light-card2: #f3f4f6;
+  --color-light-label1: #374151;
+  --color-light-label2: #6b7280;
+  --color-light-text1: #111827;
+  --color-light-text2: #4b5563;
+
+  /* --------------------------
+   🌙 DARK THEME
+  -------------------------- */
+  --color-dark-bg: #161616;
+  --color-dark-bg-secondary: #1d1e20;
+  --color-dark-card: #242526;
+  --color-dark-border: #3a3b3d;
+  --color-dark-border-strong: #4a4c4f;
+  --color-dark-text: #f1f5f9;
+  --color-dark-text-secondary: #cbd5e1;
+  --color-dark-text-muted: #9ca3af;
+  --color-dark-hover: #2f3133;
+  --color-dark-active: #3a3c3e;
+  --color-dark-card1: #1d1e20;
+  --color-dark-card2: #242526;
+  --color-dark-label1: #e2e8f0;
+  --color-dark-label2: #94a3b8;
+  --color-dark-text1: #f8fafc;
+  --color-dark-text2: #cbd5e1;
+
+  /* --------------------------
+   📝 INPUT - LIGHT
+  -------------------------- */
+  --color-input-light-background: #ffffff;
+  --color-input-light-background-hover: #f3f4f6;
+  --color-input-light-background-active: #e5e7eb;
+  --color-input-light-background-disabled: #f5f6f7;
+  --color-input-light-border: #e2e4e7;
+  --color-input-light-border-hover: #cfd3d8;
+  --color-input-light-border-focus: #0369a1;
+  --color-input-light-border-disabled: #e2e4e7;
+  --color-input-light-text: #111827;
+  --color-input-light-text-secondary: #4b5563;
+  --color-input-light-placeholder: #6b7280;
+  --color-input-light-text-disabled: #6b7280;
+  --color-input-light-label: #374151;
+  --color-input-light-label-secondary: #6b7280;
+  --color-input-light-helper: #4b5563;
+
+  /* --------------------------
+   📝 INPUT - DARK
+  -------------------------- */
+  --color-input-dark-background: #1d1e20;
+  --color-input-dark-background-hover: #2f3133;
+  --color-input-dark-background-active: #3a3c3e;
+  --color-input-dark-background-disabled: #242526;
+  --color-input-dark-border: #3a3b3d;
+  --color-input-dark-border-hover: #4a4c4f;
+  --color-input-dark-border-focus: #0369a1;
+  --color-input-dark-border-disabled: #3a3b3d;
+  --color-input-dark-text: #f8fafc;
+  --color-input-dark-text-secondary: #cbd5e1;
+  --color-input-dark-placeholder: #9ca3af;
+  --color-input-dark-text-disabled: #9ca3af;
+  --color-input-dark-label: #e2e8f0;
+  --color-input-dark-label-secondary: #94a3b8;
+  --color-input-dark-helper: #cbd5e1;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-6px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.15s ease-out forwards;
+}
