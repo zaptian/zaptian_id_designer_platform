@@ -6,7 +6,7 @@ export const navData = [
         heading: "Overview",
         links: [
           { label: "Home", path: "https://www.google.com" },
-          { label: "Product Overview", path: "/product" },
+          { label: "Product Overview", path: "/product_overview" },
           { label: "How It Works", path: "/how-it-works" },
           { label: "Features", path: "/features" },
           { label: "Benefits", path: "/benefits" },

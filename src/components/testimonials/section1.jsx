@@ -1,4 +1,4 @@
-import bgImage from "../../assets/images/testimonials_bg.png"
+import bgImage from "../../assets/images/testimonials/testimonials_bg.png"
 
 function Section1() {
   return (

@@ -5,6 +5,7 @@ import Hello from "./components/hello"
 import FAQ from "./components/faq"
 import CustomerStories from "./components/customer_stories"
 import Testimonials from "./components/testimonials"
+import Product_Overview from "./components/product_overview"
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/faq" element={<FAQ />} />
         <Route path="/customer_stories" element={<CustomerStories />} />
         <Route path="/testimonials" element={<Testimonials />} />
+        <Route path="/product_overview" element={<Product_Overview />} />
       </Route>
     </Routes>
   )
