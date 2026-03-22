@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react"
 import { Globe, Sun, Moon, Menu, X, ChevronDown } from "../assets/icons"
 import { navData } from "../data/navdata"
 import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 
 function DropdownMenu({ sections }) {
@@ -113,6 +114,7 @@ function MobileNavItem({ item }) {
 }
 
 function Navbar() {
+  const navigate = useNavigate()
   const [darkMode, setDarkMode] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -149,8 +151,11 @@ function Navbar() {
             </button>
 
             {/* Login */}
-            <button className="text-sm font-medium text-button-primary border border-button-outline-border px-4 py-1.5 rounded-md hover:bg-button-outline-hover transition-colors">
-              Login
+            <button 
+              onClick={() => navigate("/sign_up")}
+              className="text-sm font-medium text-button-primary border border-button-outline-border px-4 py-1.5 rounded-md hover:bg-button-outline-hover transition-colors"
+            >
+              Sign Up
             </button>
 
             {/* Dark/Light Toggle */}

@@ -5,7 +5,7 @@ export const navData = [
       {
         heading: "Overview",
         links: [
-          { label: "Home", path: "https://www.google.com" },
+          { label: "Home", path: "/" },
           { label: "Product Overview", path: "/product_overview" },
           { label: "How It Works", path: "/how-it-works" },
           { label: "Features", path: "/features" },
@@ -49,7 +49,7 @@ export const navData = [
       {
         heading: null,
         links: [
-          { label: "Why Zaptian", path: "/customers/why-zaptian" },
+          { label: "Why Zaptian", path: "/why_zaptian" },
           { label: "Customer Stories", path: "/customer_stories" },
           { label: "Testimonials", path: "/testimonials" },
           { label: "Security & Compliance", path: "/customers/security" },

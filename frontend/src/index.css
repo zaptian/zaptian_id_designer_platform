@@ -190,3 +190,7 @@
 .animate-scroll-left:hover {
   animation-play-state: paused;
 }
+
+body {
+  font-family: var(--font-dm);
+}
