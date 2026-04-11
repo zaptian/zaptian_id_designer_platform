@@ -6,32 +6,20 @@ import signUpAnimation from "../../assets/anime/sign_up.json"
 import logoLight from "../../assets/logo/logo_light.png"
 import logoDark from "../../assets/logo/logo_dark.png"
 
-function SignUp() {
+function SignIn() {
   const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
     email: "",
-    mobile: "",
     password: "",
-    confirmPassword: "",
-    agreeTerms: false,
   })
 
   const [errors, setErrors] = useState({})
   const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const validate = () => {
     const newErrors = {}
-
-    if (!formData.firstName.trim())
-      newErrors.firstName = "First name is required"
-
-    if (!formData.lastName.trim())
-      newErrors.lastName = "Last name is required"
 
     if (!formData.email.trim()) {
       newErrors.email = "Email is required"
@@ -39,89 +27,55 @@ function SignUp() {
       newErrors.email = "Enter a valid email"
     }
 
-    if (!formData.mobile.trim()) {
-      newErrors.mobile = "Mobile number is required"
-    } else if (!/^[6-9]\d{9}$/.test(formData.mobile)) {
-      newErrors.mobile = "Enter a valid 10-digit mobile number"
-    }
-
     if (!formData.password) {
       newErrors.password = "Password is required"
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters"
-    } else if (!/(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/.test(formData.password)) {
-      newErrors.password = "Must include uppercase, number & special character"
     }
-
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password"
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match"
-    }
-
-    if (!formData.agreeTerms)
-      newErrors.agreeTerms = "You must agree to the terms"
 
     return newErrors
   }
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target
+    const { name, value } = e.target
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
     }))
     setErrors((prev) => ({ ...prev, [name]: "" }))
   }
 
-  const handleSubmit =  async () => {
+  const handleSubmit = async () => {
     const validationErrors = validate()
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors)
       return
     }
-    // // TODO: API call to backend
-    // console.log("Form submitted:", formData)
 
     setLoading(true)
     try {
-        const response = await axios.post("http://localhost:5000/api/auth/register", {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+      const response = await axios.post("http://localhost:5000/api/auth/login", {
         email: formData.email,
-        mobile: formData.mobile,
         password: formData.password,
-        confirmPassword: formData.confirmPassword,
-        })
+      })
 
-        if (response.status === 201) {
-        console.log("Account created:", response.data)
-        // TODO: navigate to login or dashboard
-        navigate("/login")
-        }
+      if (response.status === 200) {
+        console.log("Login successful:", response.data)
+        // TODO: navigate to dashboard
+        navigate("/")
+      }
 
     } catch (error) {
-        if (error.response) {
+      if (error.response) {
         const { status, data } = error.response
-
-        if (status === 409) {
-            // Email or mobile already exists
-            if (data.message.includes("Email")) {
-            setErrors((prev) => ({ ...prev, email: data.message }))
-            } else if (data.message.includes("Mobile")) {
-            setErrors((prev) => ({ ...prev, mobile: data.message }))
-            }
-        } else if (status === 400) {
-            console.error("Validation error:", data.message)
+        if (status === 401 || status === 404) {
+          setErrors((prev) => ({ ...prev, email: "Invalid credentials" }))
         } else {
-            console.error("Server error:", data.message)
+          console.error("Server error:", data.message)
         }
-        } else {
+      } else {
         console.error("Network error:", error.message)
-        }
-
+      }
     } finally {
-        setLoading(false)
+      setLoading(false)
     }
   }
 
@@ -175,8 +129,8 @@ function SignUp() {
           {/* Bottom Slogan */}
           <div className="text-center">
             <p className="text-lg font-black font-dm text-light-text1 dark:text-dark-text1 leading-snug">
-              Design, Print, Verify —{" "}
-              <span className="text-button-primary">ID Cards Made Effortless</span>
+              Welcome back to —{" "}
+              <span className="text-button-primary">Zaptian ID Designer</span>
             </p>
           </div>
 
@@ -189,22 +143,8 @@ function SignUp() {
 
           {/* Heading */}
           <h1 className="text-3xl font-black font-dm text-light-text1 dark:text-dark-text1">
-            Create an account
+            Sign in to your account
           </h1>
-
-          {/* First Name & Last Name */}
-          <div className="flex gap-3">
-            <div className="flex-1 flex flex-col gap-1">
-              <input type="text" name="firstName" placeholder="First name"
-                value={formData.firstName} onChange={handleChange} className={inputClass("firstName")} />
-              {errors.firstName && <p className="text-xs text-button-danger font-dm">{errors.firstName}</p>}
-            </div>
-            <div className="flex-1 flex flex-col gap-1">
-              <input type="text" name="lastName" placeholder="Last name"
-                value={formData.lastName} onChange={handleChange} className={inputClass("lastName")} />
-              {errors.lastName && <p className="text-xs text-button-danger font-dm">{errors.lastName}</p>}
-            </div>
-          </div>
 
           {/* Email */}
           <div className="flex flex-col gap-1">
@@ -213,18 +153,11 @@ function SignUp() {
             {errors.email && <p className="text-xs text-button-danger font-dm">{errors.email}</p>}
           </div>
 
-          {/* Mobile */}
-          <div className="flex flex-col gap-1">
-            <input type="tel" name="mobile" placeholder="Mobile number"
-              value={formData.mobile} onChange={handleChange} className={inputClass("mobile")} />
-            {errors.mobile && <p className="text-xs text-button-danger font-dm">{errors.mobile}</p>}
-          </div>
-
-          {/* Create Password */}
+          {/* Password */}
           <div className="flex flex-col gap-1">
             <div className="relative">
               <input type={showPassword ? "text" : "password"} name="password"
-                placeholder="Create password" value={formData.password}
+                placeholder="Password" value={formData.password}
                 onChange={handleChange} className={`${inputClass("password")} pr-12`} />
               <button type="button" onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-input-light-placeholder dark:text-input-dark-placeholder hover:text-light-text1 dark:hover:text-dark-text1 transition-colors">
@@ -234,49 +167,26 @@ function SignUp() {
             {errors.password && <p className="text-xs text-button-danger font-dm">{errors.password}</p>}
           </div>
 
-          {/* Confirm Password */}
-          <div className="flex flex-col gap-1">
-            <div className="relative">
-              <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword"
-                placeholder="Confirm password" value={formData.confirmPassword}
-                onChange={handleChange} className={`${inputClass("confirmPassword")} pr-12`} />
-              <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-input-light-placeholder dark:text-input-dark-placeholder hover:text-light-text1 dark:hover:text-dark-text1 transition-colors">
-                {showConfirmPassword ? <EyeOff /> : <EyeOpen />}
-              </button>
-            </div>
-            {errors.confirmPassword && <p className="text-xs text-button-danger font-dm">{errors.confirmPassword}</p>}
+          {/* Forgot Password Link */}
+          <div className="flex justify-end mt-[-10px]">
+            <span className="text-sm font-dm text-button-primary hover:underline cursor-pointer">
+              Forgot password?
+            </span>
           </div>
 
-          {/* Checkbox */}
-          <div className="flex flex-col gap-1">
-            <div className="flex items-start gap-3">
-              <input type="checkbox" name="agreeTerms" id="agreeTerms"
-                checked={formData.agreeTerms} onChange={handleChange}
-                className="mt-1 w-4 h-4 accent-button-primary cursor-pointer" />
-              <label htmlFor="agreeTerms" className="text-sm font-dm text-light-text2 dark:text-dark-text2 cursor-pointer">
-                I agree to the{" "}
-                <span className="text-button-primary hover:underline cursor-pointer">Terms & Conditions</span>
-                {" "}and{" "}
-                <span className="text-button-primary hover:underline cursor-pointer">Privacy Policy</span>
-              </label>
-            </div>
-            {errors.agreeTerms && <p className="text-xs text-button-danger font-dm">{errors.agreeTerms}</p>}
-          </div>
-
-          {/* Create Account Button */}
+          {/* Sign In Button */}
           <button
             onClick={handleSubmit}
             disabled={loading}
             className="w-full py-3 rounded-xl bg-button-primary hover:bg-button-primary-hover active:bg-button-primary-active text-button-primary-text font-dm font-semibold text-sm transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
            >
-            {loading ? "Creating Account..." : "Create Account"}
+            {loading ? "Signing in..." : "Sign in"}
            </button>
 
-          {/* Or register with */}
+          {/* Or sign in with */}
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px bg-light-border dark:bg-dark-border" />
-            <span className="text-xs font-dm text-light-text2 dark:text-dark-text2 whitespace-nowrap">or register with</span>
+            <span className="text-xs font-dm text-light-text2 dark:text-dark-text2 whitespace-nowrap">or sign in with</span>
             <div className="flex-1 h-px bg-light-border dark:bg-dark-border" />
           </div>
 
@@ -291,12 +201,12 @@ function SignUp() {
             Continue with Google
           </button>
 
-          {/* Already have an account */}
+          {/* Don't have an account */}
           <p className="text-center text-sm font-dm text-light-text2 dark:text-dark-text2 mt-2">
-            Already have an account?{" "}
-            <span onClick={() => navigate("/sign_in")}
+            Don't have an account?{" "}
+            <span onClick={() => navigate("/sign_up")}
               className="text-button-primary font-semibold hover:underline cursor-pointer">
-              Log in
+              Sign up
             </span>
           </p>
 
@@ -307,4 +217,4 @@ function SignUp() {
   )
 }
 
-export default SignUp
+export default SignIn
