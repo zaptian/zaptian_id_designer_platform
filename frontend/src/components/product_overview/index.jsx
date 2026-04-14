@@ -16,7 +16,7 @@ function Product_Overview() {
       {/* ─── 1. Hero & Intro ("What is Zaptian") ───────────────────────── */}
       <section className="px-6 max-w-7xl mx-auto w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-8">
         {/* ─── LEFT: Content ───────────────────────── */}
-        <div className="flex-1 text-center lg:text-left flex flex-col items-center lg:items-start gap-6">
+        <div className="flex-1 text-center lg:text-left items-center lg:items-start flex flex-col gap-6">
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-button-primary/30 bg-button-primary/10 text-button-primary text-xs font-semibold uppercase tracking-widest">
             {data.hero.badge}
           </span>
@@ -52,7 +52,7 @@ function Product_Overview() {
         </div>
 
         {/* ─── RIGHT: Animation Area ───────────────────────── */}
-        <div className="flex-1 relative flex items-center justify-center min-h-[460px]">
+        <div className="flex-1 relative flex items-center justify-center width_425px_hidden min-h-[460px]">
           {/* Soft background glow */}
           <div className="absolute w-80 h-80 rounded-full bg-blue-500/10 blur-[120px] animate-pulseSlow" />
 
@@ -65,7 +65,14 @@ function Product_Overview() {
             <div className="relative p-6 space-y-5">
               {/* Header */}
               <div className="flex items-center justify-between">
-                <h3 className="text-xl font-bold text-transparent" style={{ background: "linear-gradient(90deg, #1d4ed8, #3b82f6, #60a5fa)", WebkitBackgroundClip: "text" }}>
+                <h3
+                  className="text-xl font-bold text-transparent"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, #1d4ed8, #3b82f6, #60a5fa)",
+                    WebkitBackgroundClip: "text",
+                  }}
+                >
                   Product Overview
                 </h3>
                 <div className="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">

@@ -11,6 +11,7 @@ function HowItWorks() {
     <div className="w-full bg-light-bg dark:bg-dark-bg font-dm flex flex-col gap-24 pt-16 pb-24 text-light-text1 dark:text-dark-text1 overflow-x-hidden">
       {/* ─── 1. Hero Section ───────────────────────── */}
       <section className="px-6 max-w-7xl mx-auto w-full flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+        {/* ─── LEFT: Content ───────────────────────── */}
         <div className="flex-1 text-center lg:text-left flex flex-col items-center lg:items-start gap-6">
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-button-primary/30 bg-button-primary/10 text-button-primary text-xs font-semibold uppercase tracking-widest">
             {data.hero.badge}
@@ -38,7 +39,8 @@ function HowItWorks() {
           </div>
         </div>
 
-        <div className="flex-1 flex items-center justify-center relative ">
+        {/* ─── RIGHT: Theme Animation Area ─────────── */}
+        <div className="flex-1 flex items-center justify-center width_425px_hidden relative ">
           <div className="absolute w-80 h-80 rounded-full bg-button-primary/10 blur-[100px] animate-pulseSlow -z-10" />
           <div className="relative w-full max-w-[500px]">
             <Lottie

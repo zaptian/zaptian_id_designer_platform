@@ -3,6 +3,8 @@ import { Globe, Sun, Moon, Menu, X, ChevronDown } from "../assets/icons";
 import { navData } from "../data/navdata";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import logoLight from "../assets/logo/logo_light.webp";
+import logoDark from "../assets/logo/logo_dark.webp";
 
 function DropdownMenu({ sections }) {
   const isMultiSection = sections.length > 1;
@@ -139,9 +141,21 @@ function Navbar() {
         {/* Desktop Navigation */}
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           {/* Left - Brand */}
-          <span className="text-2xl font-bold text-button-primary">
-            Zaptian
-          </span>
+          <Link
+            to="/"
+            className="flex items-center transition-transform hover:scale-105 active:scale-95"
+          >
+            <img
+              src={logoDark}
+              alt="Zaptian Logo"
+              className="w-36 md:w-46 lg:w-52 object-contain dark:hidden block"
+            />
+            <img
+              src={logoLight}
+              alt="Zaptian Logo"
+              className="w-36 md:w-46 lg:w-52 object-contain hidden dark:block"
+            />
+          </Link>
 
           {/* Center - Nav Links (desktop) */}
           <ul className="hidden nav_desktop_menu_open items-center gap-1">
