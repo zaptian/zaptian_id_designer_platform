@@ -26,8 +26,21 @@
     <!-- Favicon Integration -->
     <link rel="icon" type="image/x-icon" href="/src/assets/logo/logo_512.ico" />
     <link rel="apple-touch-icon" href="/src/assets/logo/logo_512.ico" />
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+          pageLanguage: 'en',
+          includedLanguages: 'en,zh-CN,es,ar,hi,fr,ru,pt,de,ja,ko,it',
+          autoDisplay: true
+        }, 'google_translate_element');
+      }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   </head>
   <body>
+    <div id="google_translate_element" style="display:none"></div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

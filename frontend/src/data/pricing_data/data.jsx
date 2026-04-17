@@ -7,7 +7,11 @@ export const pricingData = {
   plans: [
     {
       name: "Starter",
-      price: "Free",
+      prices: {
+        INR: "Free",
+        USD: "Free",
+        EUR: "Free"
+      },
       period: "",
       description: "Up to 20 IDs/month",
       features: [
@@ -22,7 +26,17 @@ export const pricingData = {
     },
     {
       name: "Standard",
-      price: "₹4,499",
+      prices: {
+        INR: "₹4,499",
+        USD: "$55",
+        EUR: "€50"
+      },
+      originalPrices: {
+        INR: "₹5,999",
+        USD: "$75",
+        EUR: "€69"
+      },
+      discount: "25% OFF",
       period: "/ year",
       description: "Up to 2,000 IDs/month",
       features: [
@@ -40,7 +54,17 @@ export const pricingData = {
     },
     {
       name: "Pro",
-      price: "₹6,899",
+      prices: {
+        INR: "₹6,899",
+        USD: "$85",
+        EUR: "€79"
+      },
+      originalPrices: {
+        INR: "₹8,999",
+        USD: "$110",
+        EUR: "€99"
+      },
+      discount: "23% OFF",
       period: "/ year",
       description: "Up to 10,000 IDs/month",
       features: [
@@ -56,7 +80,11 @@ export const pricingData = {
     },
     {
       name: "Business",
-      price: "Custom",
+      prices: {
+        INR: "Custom",
+        USD: "Custom",
+        EUR: "Custom"
+      },
       period: "",
       description: "Unlimited IDs",
       features: [

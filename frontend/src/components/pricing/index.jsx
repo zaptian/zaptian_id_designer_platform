@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { pricingData as data } from "../../data/pricing_data/data";
 import { Check, Info, CreditCard, Zap, CheckCircle2 } from "../../assets/icons";
 import { useNavigate } from "react-router-dom";
 
 function Pricing() {
   const navigate = useNavigate();
+  const [currency, setCurrency] = useState("INR");
 
   return (
     <div className="w-full bg-light-bg dark:bg-dark-bg font-dm flex flex-col gap-20 pt-16 pb-24 text-light-text1 dark:text-dark-text1 overflow-x-hidden">
@@ -117,6 +119,31 @@ function Pricing() {
         </div>
       </section>
 
+      {/* ─── Currency Switcher ────────────────── */}
+      <section className="px-6 flex justify-center -mt-8 mb-4">
+        <div className="bg-light-card1 dark:bg-dark-card1 p-1.5 rounded-3xl border border-light-border dark:border-dark-border flex items-center gap-1 shadow-2xl backdrop-blur-sm">
+          {[
+            { code: "INR", symbol: "₹" },
+            { code: "USD", symbol: "$" },
+            { code: "EUR", symbol: "€" },
+          ].map((curr) => (
+            <button
+              key={curr.code}
+              onClick={() => setCurrency(curr.code)}
+              className={`px-6 py-2.5 rounded-2xl text-xs font-bold transition-all duration-300 flex items-center gap-2
+                ${
+                  currency === curr.code
+                    ? "bg-button-primary text-white shadow-lg shadow-button-primary/30 scale-105"
+                    : "text-light-text2 dark:text-dark-text2 hover:bg-light-hover dark:hover:bg-dark-hover"
+                }`}
+            >
+              <span className="text-[10px] tracking-wider uppercase opacity-80">{curr.code}</span>
+              <span className="text-base">{curr.symbol}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+
       {/* ─── Pricing Grid ──────────────────────── */}
       <section className="px-6 max-w-7xl mx-auto w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 lg:gap-6">
@@ -142,17 +169,29 @@ function Pricing() {
                 </p>
               </div>
 
-              <div className="mb-8 flex items-baseline gap-1">
-                <span
-                  className={`font-black tracking-tight ${plan.price === "Free" || plan.price === "Custom" ? "text-4xl" : "text-4xl"}`}
-                >
-                  {plan.price}
-                </span>
-                {plan.period && (
-                  <span className="text-light-text2 dark:text-dark-text2 font-medium">
-                    {plan.period}
-                  </span>
+              <div className="mb-8 flex flex-col justify-end min-h-[64px]">
+                {plan.originalPrices?.[currency] && (
+                  <div className="flex items-center mb-1">
+                    <span className="text-sm font-bold text-light-text2/40 dark:text-dark-text2/40 line-through">
+                      {plan.originalPrices[currency]}
+                    </span>
+                    {plan.discount && (
+                      <span className="text-xs font-bold text-button-danger ml-2 px-1.5 py-0.5 bg-button-danger/10 rounded">
+                        {plan.discount}
+                      </span>
+                    )}
+                  </div>
                 )}
+                <div className="flex items-baseline gap-1">
+                  <span className="font-black tracking-tight text-4xl">
+                    {plan.prices[currency]}
+                  </span>
+                  {plan.period && (
+                    <span className="text-light-text2 dark:text-dark-text2 font-medium">
+                      {plan.period}
+                    </span>
+                  )}
+                </div>
               </div>
 
               <button

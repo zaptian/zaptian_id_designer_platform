@@ -80,9 +80,10 @@ class App {
       console.log("✅ Database models synced");
 
       // 4 — Start Listening
-      this.server = this.app.listen(this.port, () => {
-        console.log(`✅ Server running on http://localhost:${this.port}`);
+      this.server = this.app.listen(Number(this.port), '0.0.0.0', () => {
+        console.log(`✅ Server running on http://0.0.0.0:${this.port}`);
       });
+
 
       this.setupGracefulShutdown();
 
