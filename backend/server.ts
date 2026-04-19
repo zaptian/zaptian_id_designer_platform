@@ -5,7 +5,9 @@ import dotenv from "dotenv";
 import { Server } from "http";
 
 import { sequelize, createDatabaseIfNotExists } from "./config/db.js";
+import { setupAssociations } from "./models/associations.js";
 import authRoutes from "./routes/authroutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 import { AppError, ErrorCode, NotFoundError } from "./utils/appError.js";
 import { globalErrorHandler } from "./middlewares/errorMiddleware.js";
 
@@ -33,7 +35,12 @@ class App {
 
   private setupMiddlewares(): void {
     // Standard Middlewares
-    this.app.use(cors());
+    this.app.use(
+      cors({
+        origin: ["http://localhost:5173"],
+        credentials: true,
+      }),
+    );
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(cookieParser());
@@ -44,11 +51,14 @@ class App {
   private setupRoutes(): void {
     // Health Check
     this.app.get("/health", (req, res) => {
-      res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+      res
+        .status(200)
+        .json({ status: "ok", timestamp: new Date().toISOString() });
     });
 
     // API Routes
     this.app.use("/api/auth", authRoutes);
+    this.app.use("/api/admin", adminRoutes);
 
     // 404 Handler - For all undefined routes
     this.app.use((req: Request, res: Response, next: NextFunction) => {
@@ -56,12 +66,10 @@ class App {
     });
   }
 
-
   private setupErrorHandling(): void {
     // Global Error Middleware
     this.app.use(globalErrorHandler);
   }
-
 
   public async start(): Promise<void> {
     try {
@@ -71,22 +79,24 @@ class App {
       await createDatabaseIfNotExists();
       console.log("✅ Database verified");
 
-      // 2 — Establish Connection
+      // 2 — Setup Associations
+      setupAssociations();
+      console.log("✅ Model associations established");
+
+      // 3 — Establish Connection
       await sequelize.authenticate();
       console.log("✅ MySQL connection established");
 
       // 3 — Sync Database Models
-      await sequelize.sync({ alter: false });
+      await sequelize.sync({ alter: true });
       console.log("✅ Database models synced");
 
       // 4 — Start Listening
-      this.server = this.app.listen(Number(this.port), '0.0.0.0', () => {
-        console.log(`✅ Server running on http://0.0.0.0:${this.port}`);
+      this.server = this.app.listen(Number(this.port), "127.0.0.1", () => {
+        console.log(`✅ Server running on http://127.0.0.1:${this.port}`);
       });
 
-
       this.setupGracefulShutdown();
-
     } catch (error) {
       console.error("❌ Failed to start server:", error);
       process.exit(1);
@@ -96,11 +106,11 @@ class App {
   private setupGracefulShutdown(): void {
     const shutdown = async (signal: string) => {
       console.log(`\nReceived ${signal}. Shutting down gracefully...`);
-      
+
       if (this.server) {
         this.server.close(async () => {
           console.log("🛑 Express server closed.");
-          
+
           try {
             await sequelize.close();
             console.log("🛑 Database connection closed.");
@@ -123,4 +133,3 @@ class App {
 // Bootstrap the application
 const serverApp = new App();
 serverApp.start();
-

@@ -6,6 +6,7 @@ import logoLight from "../assets/logo/logo_light.webp";
 import logoDark from "../assets/logo/logo_dark.webp";
 import { NavItem } from "./navbar/NavItem";
 import { MobileNavItem } from "./navbar/MobileNavItem";
+import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -15,6 +16,8 @@ function Navbar() {
   const [langOpen, setLangOpen] = useState(false);
   const [mobileLangOpen, setMobileLangOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState("en");
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
 
   // Scroll locking logic
   useEffect(() => {
@@ -135,18 +138,62 @@ function Navbar() {
           </div>
 
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => navigate("/sign_in")}
-              className="text-sm font-medium text-light-text dark:text-dark-text hover:text-button-primary dark:hover:text-button-primary px-3 py-1.5 transition-colors"
-            >
-              Log in
-            </button>
-            <button
-              onClick={() => navigate("/sign_up")}
-              className="text-sm font-medium text-button-primary border border-button-outline-border px-4 py-1.5 rounded-md hover:bg-button-outline-hover transition-colors"
-            >
-              Sign Up
-            </button>
+            {!isAuthenticated ? (
+              <>
+                <button
+                  onClick={() => navigate("/sign_in")}
+                  className="text-sm font-medium text-light-text dark:text-dark-text hover:text-button-primary dark:hover:text-button-primary px-3 py-1.5 transition-colors"
+                >
+                  Log in
+                </button>
+                <button
+                  onClick={() => navigate("/sign_up")}
+                  className="text-sm font-medium text-button-primary border border-button-outline-border px-4 py-1.5 rounded-md hover:bg-button-outline-hover transition-colors"
+                >
+                  Sign Up
+                </button>
+              </>
+            ) : (
+              <div className="relative">
+                <button
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  className="w-9 h-9 rounded-full bg-button-primary text-white flex items-center justify-center font-bold shadow-md hover:ring-2 hover:ring-button-primary/50 transition-all focus:outline-none ml-2"
+                >
+                  {user?.firstName ? user.firstName.charAt(0).toUpperCase() : "U"}
+                </button>
+                
+                {userMenuOpen && (
+                  <div className="absolute top-full right-0 mt-2 w-48 bg-light-bg dark:bg-dark-card border border-light-border dark:border-dark-border rounded-xl shadow-xl py-2 z-50 animate-fadeIn overflow-hidden">
+                    <div className="px-4 py-2 border-b border-light-border dark:border-dark-border/50 mb-1">
+                      <p className="text-sm font-bold text-light-text1 dark:text-white truncate">
+                        {user?.firstName} {user?.lastName}
+                      </p>
+                      <p className="text-xs text-light-text2 dark:text-dark-text truncate">
+                        {user?.email}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        navigate("/dashboard");
+                        setUserMenuOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-light-text1 dark:text-dark-text hover:bg-light-hover dark:hover:bg-dark-hover transition-colors font-medium flex items-center gap-2"
+                    >
+                      Dashboard
+                    </button>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setUserMenuOpen(false);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors font-medium flex items-center gap-2"
+                    >
+                      Log out
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           <button
@@ -267,18 +314,62 @@ function Navbar() {
             </div>
 
             <div className="flex flex-col gap-3">
-              <button
-                onClick={() => navigate("/sign_in")}
-                className="w-full text-center py-3 text-sm font-medium text-light-text dark:text-dark-text border border-light-border dark:border-dark-border rounded-lg shadow-sm"
-              >
-                Log in
-              </button>
-              <button
-                onClick={() => navigate("/sign_up")}
-                className="w-full text-center py-3 text-sm font-medium text-white bg-button-primary rounded-lg shadow-lg shadow-button-primary/20"
-              >
-                Sign Up
-              </button>
+              {!isAuthenticated ? (
+                <>
+                  <button
+                    onClick={() => {
+                      navigate("/sign_in");
+                      closeMenu();
+                    }}
+                    className="w-full text-center py-3 text-sm font-medium text-light-text dark:text-dark-text border border-light-border dark:border-dark-border rounded-lg shadow-sm"
+                  >
+                    Log in
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigate("/sign_up");
+                      closeMenu();
+                    }}
+                    className="w-full text-center py-3 text-sm font-medium text-white bg-button-primary rounded-lg shadow-lg shadow-button-primary/20"
+                  >
+                    Sign Up
+                  </button>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center gap-3 px-2 py-3 bg-light-card1 dark:bg-dark-card border border-light-border dark:border-dark-border/50 rounded-xl mb-2">
+                    <div className="w-10 h-10 rounded-full bg-button-primary text-white flex items-center justify-center font-bold shadow-md shrink-0">
+                      {user?.firstName ? user.firstName.charAt(0).toUpperCase() : "U"}
+                    </div>
+                    <div className="overflow-hidden">
+                      <p className="text-sm font-bold text-light-text1 dark:text-white truncate">
+                        {user?.firstName} {user?.lastName}
+                      </p>
+                      <p className="text-xs text-light-text2 dark:text-gray-400 truncate">
+                        {user?.email}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      navigate("/dashboard");
+                      closeMenu();
+                    }}
+                    className="w-full text-center py-3 text-sm font-bold text-white bg-gradient-to-r from-button-primary to-[#0f4c9c] rounded-xl shadow-lg transition-transform active:scale-95"
+                  >
+                    Dashboard
+                  </button>
+                  <button
+                    onClick={() => {
+                      logout();
+                      closeMenu();
+                    }}
+                    className="w-full text-center py-3 text-sm font-medium text-red-500 border border-red-500/20 bg-red-50 dark:bg-red-500/5 rounded-xl hover:bg-red-100 dark:hover:bg-red-500/10 transition-colors"
+                  >
+                    Log out
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>

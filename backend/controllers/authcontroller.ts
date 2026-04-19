@@ -4,7 +4,11 @@ import jwt from "jsonwebtoken";
 import { Op } from "sequelize";
 import User from "../models/user.js";
 import { catchAsync } from "../utils/catchAsync.js";
-import { ConflictError, ErrorCode, UnauthorizedError } from "../utils/appError.js";
+import {
+  ConflictError,
+  ErrorCode,
+  UnauthorizedError,
+} from "../utils/appError.js";
 
 const signToken = (id: number) => {
   return jwt.sign({ id }, process.env.JWT_SECRET as string, {
@@ -12,11 +16,20 @@ const signToken = (id: number) => {
   });
 };
 
-const createSendToken = (user: User, statusCode: number, req: Request, res: Response) => {
-  const token = signToken(user.id);
+const createSendToken = (
+  user: User,
+  statusCode: number,
+  req: Request,
+  res: Response,
+) => {
+  const userId = user.id || user.get("id");
+  const token = signToken(userId as number);
 
   const cookieOptions = {
-    expires: new Date(Date.now() + Number(process.env.JWT_COOKIE_EXPIRES_IN || 1) * 24 * 60 * 60 * 1000),
+    expires: new Date(
+      Date.now() +
+        Number(process.env.JWT_COOKIE_EXPIRES_IN || 1) * 24 * 60 * 60 * 1000,
+    ),
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
   };
@@ -33,70 +46,85 @@ const createSendToken = (user: User, statusCode: number, req: Request, res: Resp
         lastName: user.lastName,
         email: user.email,
         mobile: user.mobile,
+        role: user.role,
+        status: user.status,
       },
     },
   });
 };
 
-export const register = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { firstName, lastName, email, mobile, password } = req.body;
+export const register = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { firstName, lastName, email, mobile, password } = req.body;
 
-  const existingEmail = await User.findOne({ where: { email } });
-  if (existingEmail) {
-    throw new ConflictError("Email already registered", ErrorCode.CONFLICT);
-  }
-
-  const existingMobile = await User.findOne({ where: { mobile } });
-  if (existingMobile) {
-    throw new ConflictError("Mobile number already registered", ErrorCode.CONFLICT);
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const newUser = await User.create({
-    firstName,
-    lastName,
-    email,
-    mobile,
-    password: hashedPassword,
-  });
-
-  createSendToken(newUser, 201, req, res);
-});
-
-export const login = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { identifier, password } = req.body;
-
-  const user = await User.findOne({
-    where: {
-      [Op.or]: [
-        { email: identifier },
-        { mobile: identifier }
-      ]
+    const existingEmail = await User.findOne({ where: { email } });
+    if (existingEmail) {
+      throw new ConflictError("Email already registered", ErrorCode.CONFLICT);
     }
-  });
 
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    throw new UnauthorizedError("Incorrect email/mobile or password");
-  }
+    const existingMobile = await User.findOne({ where: { mobile } });
+    if (existingMobile) {
+      throw new ConflictError(
+        "Mobile number already registered",
+        ErrorCode.CONFLICT,
+      );
+    }
 
-  createSendToken(user, 200, req, res);
-});
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-export const logout = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  res.cookie("jwt", "loggedout", {
-    expires: new Date(Date.now() + 10 * 1000),
-    httpOnly: true,
-  });
-  res.status(200).json({ status: "success" });
-});
+    const newUser = await User.create({
+      firstName,
+      lastName,
+      email,
+      mobile,
+      password: hashedPassword,
+    });
 
-export const getMe = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  res.status(200).json({
-    status: "success",
-    data: {
-      user: req.user,
-    },
-  });
-});
+    createSendToken(newUser, 201, req, res);
+  },
+);
 
+export const login = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { identifier, password } = req.body;
+
+    const user = await User.findOne({
+      where: {
+        [Op.or]: [{ email: identifier }, { mobile: identifier }],
+      },
+    });
+
+    if (!user) {
+      throw new UnauthorizedError("Incorrect email/mobile or password");
+    }
+
+    const passwordHash = user.get("password") as string;
+    if (!passwordHash || !(await bcrypt.compare(password, passwordHash))) {
+      throw new UnauthorizedError("Incorrect email/mobile or password");
+    }
+
+    console.log("Login Debug - Signing token for User ID:", user.id || user.get("id"));
+    createSendToken(user, 200, req, res);
+  },
+);
+
+export const logout = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    res.cookie("jwt", "loggedout", {
+      expires: new Date(Date.now() + 10 * 1000),
+      httpOnly: true,
+    });
+    res.status(200).json({ status: "success" });
+  },
+);
+
+export const getMe = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    res.status(200).json({
+      status: "success",
+      data: {
+        user: req.user,
+      },
+    });
+  },
+);

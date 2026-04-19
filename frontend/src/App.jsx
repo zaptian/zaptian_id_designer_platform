@@ -50,6 +50,34 @@ import Terms_conditions from "./components/legal/Terms_conditions";
 import Privacy from "./components/legal/Privacy_Policy";
 import Cookies from "./components/legal/Cookies";
 
+// #########################################
+// ## Admin Pages (Professional Console)
+// #########################################
+import AdminLogin from "@/features/admin/pages/Login";
+import AdminDashboard from "@/features/admin/pages/Dashboard";
+import UserList from "@/features/admin/pages/UserList";
+import RolesPermissions from "@/features/admin/pages/RolesPermissions";
+import PaymentList from "@/features/admin/pages/PaymentList";
+import PartnerList from "@/features/admin/pages/PartnerList";
+import PricingPlans from "@/features/admin/pages/PricingPlans";
+import Coupons from "@/features/admin/pages/Coupons";
+import Analytics from "@/features/admin/pages/Analytics";
+import Updates from "@/features/admin/pages/Updates";
+import AuditLogs from "@/features/admin/pages/AuditLogs";
+import AdminSettings from "@/features/admin/pages/Settings";
+import AdminLayout from "@/features/admin/layouts/AdminLayout";
+import { AdminProtectedRoute } from "@/features/admin/components/ProtectedRoute";
+
+// #########################################
+// ## User Dashboard Pages
+// #########################################
+import { UserProtectedRoute } from "./features/user/components/UserProtectedRoute";
+import UserLayout from "./features/user/layouts/UserLayout";
+import UserDashboardOverview from "./features/user/pages/UserDashboardOverview";
+import UserProfileSettings from "./features/user/pages/UserProfileSettings";
+import UserBilling from "./features/user/pages/UserBilling";
+import UserSecurity from "./features/user/pages/UserSecurity";
+
 function App() {
   return (
     <Routes>
@@ -106,6 +134,38 @@ function App() {
         <Route path="/legal/terms" element={<Terms_conditions />} />
         <Route path="/legal/privacy" element={<Privacy />} />
         <Route path="/legal/cookies" element={<Cookies />} />
+      </Route>
+
+      {/*************************************
+       * User Dashboard (Self-Service)
+       **************************************/}
+      <Route path="/dashboard" element={<UserProtectedRoute />}>
+        <Route element={<UserLayout />}>
+          <Route index element={<UserDashboardOverview />} />
+          <Route path="profile" element={<UserProfileSettings />} />
+          <Route path="billing" element={<UserBilling />} />
+          <Route path="security" element={<UserSecurity />} />
+        </Route>
+      </Route>
+
+      {/*************************************
+       * Admin Portal (Isolated Layout)
+       **************************************/}
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin" element={<AdminProtectedRoute />}>
+        <Route element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="users" element={<UserList />} />
+          <Route path="roles" element={<RolesPermissions />} />
+          <Route path="payments" element={<PaymentList />} />
+          <Route path="partners" element={<PartnerList />} />
+          <Route path="plans" element={<PricingPlans />} />
+          <Route path="coupons" element={<Coupons />} />
+          <Route path="analytics" element={<Analytics />} />
+          <Route path="updates" element={<Updates />} />
+          <Route path="logs" element={<AuditLogs />} />
+          <Route path="settings" element={<AdminSettings />} />
+        </Route>
       </Route>
     </Routes>
   );

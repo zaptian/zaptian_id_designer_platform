@@ -25,3 +25,8 @@ dist-ssr
 
 # AGENT
 .agent
+
+# Environment Variables (never commit secrets)
+.env
+.env.local
+.env.production
